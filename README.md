@@ -1,4 +1,4 @@
-# keynum
+# keynum [![Build Status](https://travis-ci.org/FuzzyRhombus/keynum.svg?branch=master)](https://travis-ci.org/FuzzyRhombus/keynum)
 
 A simple enum type with emphasis on keys
 
