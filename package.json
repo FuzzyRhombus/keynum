@@ -1,0 +1,21 @@
+{
+  "name": "keynum",
+  "version": "1.0.0",
+  "description": "A simple enum type with emphasis on keys",
+  "main": "enum.js",
+  "scripts": {
+    "test": "tape test/*.test.js | tap-spec"
+  },
+  "keywords": [
+    "enum",
+    "key",
+    "value",
+    "string"
+  ],
+  "author": "Ryan Mastrolia <ryan.mastrolia@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "tap-spec": "^4.1.1",
+    "tape": "^4.6.2"
+  }
+}
