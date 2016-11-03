@@ -8,7 +8,8 @@ var objFixture = {
     },
     arrayFixture = [
         'A', 'B', {C:5}, 'D', {0:10}, '1'
-    ];
+    ],
+    crazyFixture = ['oNe', 'Two', 'tHrEE'];
 
 test('prevent creating an empty enum', function (t) {
     t.throws(Enum, /invalid/i, 'throws an error if argument passed');
@@ -22,10 +23,9 @@ test('prevent creating an empty enum', function (t) {
 });
 
 test('creating a single value enum', function (t) {
-    t.plan(2);
+    t.plan(1);
     var testEnum = new Enum('test');
     t.equal(testEnum.test, 0, 'creates an enum with single key');
-    t.ok(Object.isFrozen(testEnum), 'freezes the enum object');
 });
 
 test('creating an enum from an object', function (t) {
@@ -34,7 +34,6 @@ test('creating an enum from an object', function (t) {
         if (testEnum[key] !== objFixture[key]) t.fail('does not copy all key:value pairs to enum');
     });
     t.pass('can copy an objects enumerable key:value pairs as Enum');
-    t.ok(Object.isFrozen(testEnum), 'freezes the enum object');
     t.end();
 });
 
@@ -44,7 +43,6 @@ test('creating an enum from an array', function (t) {
     t.equal(testEnum.C, 5, 'can set key:value pair to override enumerated index');
     t.ok(testEnum.B === 1 && testEnum.D === 6, 'enumerated values increment by 1 from the previous value when not explicit');
     t.equal(testEnum['0'], 10, 'can enumerate numerical keys');
-    t.ok(Object.isFrozen(testEnum), 'freezes the enum object');
     t.end();
 });
 
@@ -73,4 +71,22 @@ test('getting valid keys on enum', function (t) {
     t.deepEqual(testEnum.keys(), Object.keys(objFixture), 'returns keys of the enumerated object');
     testEnum = Enum(arrayFixture);
     t.deepEqual(testEnum.keys(), ['0', '1', 'A', 'B', 'C', 'D'], 'returns keys of the enumerated array');
+});
+
+test('enum options', function (t) {
+
+    t.test('default options', function (t) {
+        var testEnum = Enum(crazyFixture),
+            key = crazyFixture[1];
+        t.ok(Object.isFrozen(testEnum), 'enum object is frozen by default');
+        t.equal(testEnum[key], 1, 'preserve key casing by default');
+        t.notok(testEnum.get(key.toLowerCase()), 'keys are case-sensitive');
+        t.end();
+    });
+
+    t.test('freezing enum', function (t) {
+        t.plan(1);
+        var testEnum = Enum(objFixture, {freeze: false});
+        t.notok(Object.isFrozen(testEnum), 'does not freeze the object when freeze is false');
+    });
 });

@@ -1,8 +1,9 @@
 'use strict';
 
-var Enum = module.exports = function Enum (value) {
+var Enum = module.exports = function Enum (value, options) {
     var obj;
     if (this instanceof Enum) {
+        options = options || {};
         var count = 0,
             props = null;
         if (typeof value === 'object') props = value instanceof Array ? value : Object.getOwnPropertyNames(value);
@@ -15,10 +16,10 @@ var Enum = module.exports = function Enum (value) {
             else if (!isArray || isNaN(key)) val = value[key];
             this[key] = val || count++;
         }, this);
-        Object.freeze(this);
+        if (options.freeze != false) Object.freeze(this); // jshint ignore:line
     } else {
         obj = Object.create(Enum.prototype);
-        return Enum.call(obj, value) || obj;
+        return Enum.call(obj, value, options) || obj;
     }
 };
 
