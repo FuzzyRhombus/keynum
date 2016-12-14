@@ -64,6 +64,32 @@ console.log(size.BIG); // => 10
 The new operator is optional; use however you would like to:
 `Enum(['A', 'B', 'C']) || new Enum(['D', 'E', 'F']);`
 
+## Options
+An enum can now be given options at creation:
+
+```javascript
+var size = Enum(['SMALL', 'MEDIUM', 'BIG'], {
+    freeze: false,          // defaults to true
+    ignoreCase: true,       // defaults to false
+    preserveCase: false     // defaults to true
+});
+```
+
+- `freeze` option will return a frozen object, if true *(default)*
+- `ignoreCase` will allow case-insensitive matching of keys using `has` or `get`, if true
+- `preserveCase` determines how properties are cased and can be any of the following
+    - true => preserves keys exactly as given *(default)*
+    - false => converts keys to **UPPERCASE**
+    - 'upper' => same as false
+    - 'lower' => converts keys to **lowercase**
+
+#### Example
+```javascript
+var size = Enum(['sMaLL', 'MEDium', 'BIG'], { preserveCase: 'lower', ignoreCase: true });
+console.log(size.small); // => 0
+console.log(size.has('sMaLL')) // => 'small'
+```
+
 ----
 ### Tests
 Run tests using `npm test`

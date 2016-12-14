@@ -89,4 +89,29 @@ test('enum options', function (t) {
         var testEnum = Enum(objFixture, {freeze: false});
         t.notok(Object.isFrozen(testEnum), 'does not freeze the object when freeze is false');
     });
+
+    t.test('case-insensitive keys', function (t) {
+        t.plan(2);
+        var testEnum = Enum(objFixture, {ignoreCase: true});
+        t.equal(testEnum.has('a'), 'A', 'can get the key if case does not match');
+        t.equal(testEnum.get('a'), testEnum.A, 'can get value using non case matching key');
+    });
+
+    t.test('preserving case of keys', function (t) {
+        var testEnum = Enum(crazyFixture, {preserveCase: false}),
+            value = 1,
+            key = crazyFixture[value];
+        t.equal(testEnum[key.toUpperCase()], value, 'converts keys to uppercase if preserveCase is false');
+        t.notok(testEnum.get(key), 'keys are still case-sensitive');
+
+        testEnum = Enum(crazyFixture, {preserveCase: 'lower', ignoreCase: true});
+        t.equal(testEnum[key.toLowerCase()], value, 'converts keys to the case specified');
+        t.ok(testEnum.get(key), 'can still use original casing if ignoreCase is also true');
+
+        testEnum = Enum(crazyFixture, {preserveCase: true});
+        t.equal(testEnum[key], value, 'can explicitly preserve case');
+
+        t.end();
+    });
+
 });
