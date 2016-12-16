@@ -115,3 +115,18 @@ test('enum options', function (t) {
     });
 
 });
+
+test('adding keys dynamically', function (t) {
+    var testEnum = Enum(objFixture);
+    t.throws(testEnum.add.bind(testEnum, 'test'), /cannot add.*froze/i, 'throws error if the enum is frozen');
+
+    testEnum = Enum(objFixture, {freeze:false});
+    testEnum.add('test')
+        .add('foo', 0);
+        t.equal(testEnum.get('test'), 4, 'can add key to enum with implicit value based on last highest');
+    t.equal(testEnum.get('foo'), 0, 'can add a key/value pair to enum');
+    t.throws(testEnum.add.bind(testEnum, 'A'), /key.*exists/i, 'cannot add duplicate keys');
+    t.throws(testEnum.add.bind(testEnum, 'newkey', 0), /value.*enumerated/i, 'cannot add duplicate values');
+
+    t.end();
+});

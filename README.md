@@ -36,7 +36,7 @@ so you can do things like this:
 var validType = size.get(size.has(someKeyOrValue) || size.MEDIUM); // defaults to MEDIUM if an invalid type is given
 ````
 
-`keynum` types are always returned as a frozen object to prevent changes.
+`keynum` types are always returned as a frozen object to prevent changes, unless `false` is given as the `freeze` option.
 
 ## More advanced enumeration
 An enum can be created from an array or an object. This gives greater control over the associated values. By default values start at 0 and increment by 1 as can be seen earlier. This can be overridden by providing single key:value objects as an array entry:
@@ -89,6 +89,21 @@ var size = Enum(['sMaLL', 'MEDium', 'BIG'], { preserveCase: 'lower', ignoreCase:
 console.log(size.small); // => 0
 console.log(size.has('sMaLL')) // => 'small'
 ```
+
+## Dynamic enumerated types
+An *unfrozen* enum can have new enumerations added using the `add` method:
+
+```javascript
+var size = Enum(['SMALL', 'MEDIUM', 'BIG'], {freeze:false});
+size.add('MASSIVE')
+    .add('TINY', -1);
+console.log(size.MASSIVE); // => 3
+console.log(size.TINY); // => -1
+console.log(size.keys()) // => [ 'SMALL', 'MEDIUM', 'BIG', 'MASSIVE', 'TINY' ]
+
+```
+If a value is not specified for the key it is incremented from the highest existing value. Keys must still remain unique, and duplicate values will throw an error; i.e.
+`size.add('LITTLE', 0) => Error: The specified value is already enumerated`
 
 ----
 ### Tests
